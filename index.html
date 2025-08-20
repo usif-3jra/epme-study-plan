@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Electrical Power and Machines Engineering</title>
+  <meta name="theme-color" content="#0a0a0a" />
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #14161a;
+      --text: #e8edf2;
+      --muted: #a9b3bd;
+      --accent: #4f9cff;
+      --accent-2: #22c55e;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --header-h: 72px;
+      --footer-h: 70px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text); background: radial-gradient(1200px 900px at 10% -10%, #1a1f28 0%, var(--bg) 38%);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    }
+    header {
+      position: sticky; top: 0; z-index: 20; height: var(--header-h);
+      display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: linear-gradient(180deg, rgba(20,22,26,.95), rgba(20,22,26,.70));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      backdrop-filter: blur(6px);
+    }
+    header img.logo { width: 44px; height: 44px; object-fit: contain; border-radius: 10px; background: #fff1; padding: 4px; }
+    header h1 { font-size: clamp(18px, 2.6vw, 26px); margin: 0; letter-spacing: .3px; font-weight: 700; }
+    header .sub { color: var(--muted); font-size: 12px; }
+
+    main {
+      height: calc(100dvh - var(--header-h) - var(--footer-h));
+      padding: 14px; display: grid; place-items: center;
+    }
+    .frame {
+      position: relative; width: 100%; height: 100%; max-width: 1400px; border-radius: var(--radius);
+      background: linear-gradient(180deg, #0f1115, #101419); box-shadow: var(--shadow);
+      overflow: hidden; border: 1px solid rgba(255,255,255,.06);
+    }
+    /* The study-plan image is fully controlled via transform (translate+scale) */
+    #studyImage {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center; max-width: none; max-height: none;
+      user-select: none; -webkit-user-drag: none; pointer-events: auto;
+      touch-action: none; /* we handle pinch/pan */
+    }
+    .hint {
+      position: absolute; bottom: 12px; left: 12px; right: 12px; text-align: center;
+      color: var(--muted); font-size: 12px; opacity: .85; pointer-events: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,.5);
+    }
+
+    footer {
+      height: var(--footer-h); display: grid; place-items: center; padding: 8px 12px;
+      background: linear-gradient(0deg, rgba(20,22,26,.95), rgba(20,22,26,.70));
+      border-top: 1px solid rgba(255,255,255,.06);
+      backdrop-filter: blur(6px);
+    }
+    .controls {
+      width: 100%; max-width: 820px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .left, .right { display: flex; align-items: center; gap: 8px; }
+    .btn {
+      appearance: none; border: 1px solid rgba(255,255,255,.10); color: var(--text); background: #11151b;
+      padding: 10px 14px; border-radius: 999px; font-weight: 600; font-size: 14px; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,.25); transition: transform .08s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:active { transform: translateY(1px) scale(.99); }
+    .btn:hover { border-color: rgba(255,255,255,.22); background: #101620; }
+    .btn.icon { width: 40px; height: 40px; display: grid; place-items: center; padding: 0; font-size: 18px; }
+    a.btn { text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .scale-readout { color: var(--muted); font-size: 13px; min-width: 80px; text-align: center; }
+
+    @media (max-width: 480px) {
+      .controls { gap: 6px; }
+      .scale-readout { display: none; }
+      header .sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Replace assets/logo.png with your real university logo -->
+    <img class="logo" src="assets/logo.png" alt="University logo" />
+    <div>
+      <h1>Electrical Power and Machines Engineering</h1>
+      <div class="sub">Study Plan — tap to zoom • rotates with your phone</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="frame" class="frame" aria-label="Study plan image container">
+      <!-- Replace assets/study-plan.jpg with your real study plan image (JPG/PNG) -->
+      <img id="studyImage" src="assets/study-plan.jpg" alt="Study plan" />
+      <div class="hint">Pinch to zoom • Drag to pan • Double‑tap to reset • Image never exceeds your screen borders</div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="controls">
+      <div class="left">
+        <button id="zoomOut" class="btn icon" aria-label="Zoom out">−</button>
+        <button id="reset" class="btn" aria-label="Reset view">Reset</button>
+        <button id="zoomIn" class="btn icon" aria-label="Zoom in">+</button>
+        <div id="scaleDisplay" class="scale-readout">100%</div>
+      </div>
+      <div class="right">
+        <!-- Replace assets/study-plan.pdf with your PDF; download attribute triggers file save on most browsers -->
+        <a class="btn" id="downloadPdf" href="assets/study-plan.pdf" download target="_blank" rel="noopener">⬇ Download PDF</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ------- Pan & Zoom (clamped to viewport) -------
+    const img = document.getElementById('studyImage');
+    const frame = document.getElementById('frame');
+    const zoomInBtn = document.getElementById('zoomIn');
+    const zoomOutBtn = document.getElementById('zoomOut');
+    const resetBtn = document.getElementById('reset');
+    const scaleDisplay = document.getElementById('scaleDisplay');
+
+    let naturalW = 0, naturalH = 0; // image natural size
+    let scale = 1, baseScale = 1, maxScale = 4; // baseScale fits image; maxScale is relative to base
+    let tx = 0, ty = 0; // translation in pixels relative to center
+
+    function readImageSize() {
+      if (img.complete && img.naturalWidth) {
+        naturalW = img.naturalWidth; naturalH = img.naturalHeight;
+        fitToFrame();
+      } else {
+        img.addEventListener('load', () => { naturalW = img.naturalWidth; naturalH = img.naturalHeight; fitToFrame(); }, { once: true });
+      }
+    }
+
+    function fitToFrame() {
+      const cw = frame.clientWidth; const ch = frame.clientHeight;
+      if (!naturalW || !naturalH || !cw || !ch) return;
+      baseScale = Math.min(cw / naturalW, ch / naturalH);
+      if (!isFinite(baseScale) || baseScale <= 0) baseScale = 1;
+      scale = baseScale; maxScale = baseScale * 6; // allow 6x zoom beyond fit
+      tx = 0; ty = 0; applyTransform();
+    }
+
+    function clampTranslation() {
+      const cw = frame.clientWidth, ch = frame.clientHeight;
+      const iw = naturalW * scale, ih = naturalH * scale;
+      const maxX = Math.max(0, (iw - cw) / 2);
+      const maxY = Math.max(0, (ih - ch) / 2);
+      tx = Math.max(-maxX, Math.min(maxX, tx));
+      ty = Math.max(-maxY, Math.min(maxY, ty));
+    }
+
+    function applyTransform() {
+      clampTranslation();
+      img.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(${scale})`;
+      scaleDisplay.textContent = Math.round((scale / baseScale) * 100) + '%';
+    }
+
+    function zoomBy(factor, anchorX = null, anchorY = null) {
+      const prevScale = scale;
+      scale = Math.max(baseScale, Math.min(maxScale, scale * factor));
+      // Optional: keep the point under cursor roughly stable
+      if (anchorX !== null && anchorY !== null && scale !== prevScale) {
+        const cw = frame.clientWidth, ch = frame.clientHeight;
+        const dx = anchorX - cw / 2; const dy = anchorY - ch / 2;
+        const k = (scale - prevScale) / (scale);
+        tx -= dx * k; ty -= dy * k;
+      }
+      applyTransform();
+    }
+
+    // Buttons
+    zoomInBtn.addEventListener('click', () => zoomBy(1.25));
+    zoomOutBtn.addEventListener('click', () => zoomBy(0.8));
+    resetBtn.addEventListener('click', fitToFrame);
+
+    // Double-tap / double-click reset
+    let lastTap = 0;
+    frame.addEventListener('click', (e) => {
+      const now = Date.now();
+      if (now - lastTap < 300) fitToFrame();
+      lastTap = now;
+    });
+
+    // Mouse: wheel zoom + drag pan
+    frame.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const factor = e.deltaY > 0 ? 0.9 : 1.1;
+      const rect = frame.getBoundingClientRect();
+      zoomBy(factor, e.clientX - rect.left, e.clientY - rect.top);
+    }, { passive: false });
+
+    let isPanning = false, startX = 0, startY = 0, startTx = 0, startTy = 0;
+    frame.addEventListener('pointerdown', (e) => {
+      isPanning = true; startX = e.clientX; startY = e.clientY; startTx = tx; startTy = ty; frame.setPointerCapture(e.pointerId);
+    });
+    frame.addEventListener('pointermove', (e) => {
+      if (!isPanning) return; tx = startTx + (e.clientX - startX); ty = startTy + (e.clientY - startY); applyTransform();
+    });
+    function endPan(e){ isPanning = false; try { frame.releasePointerCapture(e.pointerId); } catch(_){} }
+    frame.addEventListener('pointerup', endPan); frame.addEventListener('pointercancel', endPan); frame.addEventListener('pointerleave', endPan);
+
+    // Touch pinch zoom (2-finger)
+    let pinch = { active: false, startDist: 0, startScale: 1, startTx: 0, startTy: 0, centerX: 0, centerY: 0 };
+    frame.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+        pinch.active = true;
+        const [a, b] = e.touches; const rect = frame.getBoundingClientRect();
+        const dx = (b.clientX - a.clientX), dy = (b.clientY - a.clientY);
+        pinch.startDist = Math.hypot(dx, dy);
+        pinch.startScale = scale; pinch.startTx = tx; pinch.startTy = ty;
+        pinch.centerX = ((a.clientX + b.clientX) / 2) - rect.left;
+        pinch.centerY = ((a.clientY + b.clientY) / 2) - rect.top;
+      }
+    }, { passive: true });
+    frame.addEventListener('touchmove', (e) => {
+      if (pinch.active && e.touches.length === 2) {
+        e.preventDefault();
+        const [a, b] = e.touches; const rect = frame.getBoundingClientRect();
+        const dx = (b.clientX - a.clientX), dy = (b.clientY - a.clientY);
+        const dist = Math.hypot(dx, dy);
+        const factor = dist / (pinch.startDist || 1);
+        scale = Math.max(baseScale, Math.min(maxScale, pinch.startScale * factor));
+        // keep pinch center stable
+        const k = (scale - pinch.startScale) / (scale);
+        const cx = ((a.clientX + b.clientX) / 2) - rect.left;
+        const cy = ((a.clientY + b.clientY) / 2) - rect.top;
+        tx = pinch.startTx - (cx - frame.clientWidth/2) * k;
+        ty = pinch.startTy - (cy - frame.clientHeight/2) * k;
+        applyTransform();
+      }
+    }, { passive: false });
+    frame.addEventListener('touchend', () => { if (pinch.active) pinch.active = false; }, { passive: true });
+
+    // Orientation / resize => refit to contain fully
+    const refit = () => { fitToFrame(); };
+    window.addEventListener('resize', refit);
+    window.addEventListener('orientationchange', () => setTimeout(refit, 200));
+
+    // Kick off
+    readImageSize();
+  </script>
+</body>
+</html>
